@@ -23,7 +23,7 @@ func main() {
 
 	anaconda.SetConsumerKey(consumerKey)
 	anaconda.SetConsumerSecret(consumerSecret)
-	api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
+	twitter := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
 
 	timelineQuery := url.Values{}
 
@@ -31,7 +31,7 @@ func main() {
 	timelineQuery.Set("count", "20")
 	timelineQuery.Set("include_rts", "false")
 	fmt.Println(timelineQuery)
-	tweets, err := api.GetUserTimeline(timelineQuery)
+	tweets, err := twitter.GetUserTimeline(timelineQuery)
 	if err != nil {
 		fmt.Printf("Error to getHomeTimeline. err:%v\n", err)
 		os.Exit(1)
