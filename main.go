@@ -1,24 +1,46 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"net/url"
+	"os"
 
+	"github.com/ChimeraCoder/anaconda"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
+var consumerKey = ""
+var consumerSecret = ""
+var accessToken = ""
+var accessTokenSecret = ""
+
 func main() {
 	e := echo.New()
-
-	// ミドルウェアを設定
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	// ルートを設定
-	e.GET("/", hello) // ローカル環境の場合、http://localhost:1323/ にGETアクセスされるとhelloハンドラーを実行する
+	anaconda.SetConsumerKey(consumerKey)
+	anaconda.SetConsumerSecret(consumerSecret)
+	api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
+
+	timelineQuery := url.Values{}
+
+	timelineQuery.Set("screen_name", "fukke0906")
+	timelineQuery.Set("count", "20")
+	timelineQuery.Set("include_rts", "false")
+	fmt.Println(timelineQuery)
+	tweets, err := api.GetUserTimeline(timelineQuery)
+	if err != nil {
+		fmt.Printf("Error to getHomeTimeline. err:%v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(tweets)
+	e.GET("/", hello)
 	e.GET("/test", test)
 
-	// サーバーをポート番号1323で起動
 	e.Logger.Fatal(e.Start(":80"))
 }
 
