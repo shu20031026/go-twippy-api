@@ -20,10 +20,10 @@ type (
 	}
 )
 
-var consumerKey = ""
-var consumerSecret = ""
-var accessToken = ""
-var accessTokenSecret = ""
+var consumerKey = os.Getenv("CONSUMER_KEY")
+var consumerSecret = os.Getenv("CONSUMER_SECRET")
+var accessToken = os.Getenv("ACCESS_TOKEN")
+var accessTokenSecret = os.Getenv("ACCESS_TOKEN_SECRET")
 
 func main() {
 	e := echo.New()
