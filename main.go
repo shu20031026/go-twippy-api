@@ -11,6 +11,15 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+type (
+	tweetDataType struct {
+		Name       string   `json:"name"`
+		ScreenName string   `json:"screenName"`
+		Icon       string   `json:"icon"`
+		Tweets     []string `json:"tweets"`
+	}
+)
+
 var consumerKey = ""
 var consumerSecret = ""
 var accessToken = ""
@@ -33,13 +42,14 @@ func main() {
 	fmt.Println(timelineQuery)
 	tweets, err := twitter.GetUserTimeline(timelineQuery)
 	if err != nil {
-		fmt.Printf("Error to getHomeTimeline. err:%v\n", err)
+		fmt.Printf("Error to getUserTimeline. err:%v\n", err)
 		os.Exit(1)
 	}
 
 	fmt.Println(tweets)
 	e.GET("/", hello)
 	e.GET("/test", test)
+	e.GET("/tweets", moldData)
 
 	e.Logger.Fatal(e.Start(":80"))
 }
@@ -51,4 +61,8 @@ func hello(c echo.Context) error {
 
 func test(c echo.Context) error {
 	return c.String(http.StatusOK, "test")
+}
+
+func moldData(c echo.Context) error {
+	return c.JSON(http.StatusOK, tweetDataType{})
 }
