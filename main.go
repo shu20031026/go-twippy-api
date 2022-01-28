@@ -12,15 +12,6 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-type (
-	tweetDataType struct {
-		Name       string   `json:"name"`
-		ScreenName string   `json:"screenName"`
-		Icon       string   `json:"icon"`
-		Tweets     []string `json:"tweets"`
-	}
-)
-
 var consumerKey string
 var consumerSecret string
 var accessToken string
@@ -32,23 +23,6 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	anaconda.SetConsumerKey(consumerKey)
-	anaconda.SetConsumerSecret(consumerSecret)
-	twitter := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
-
-	timelineQuery := url.Values{}
-
-	timelineQuery.Set("screen_name", "fukke0906")
-	timelineQuery.Set("count", "20")
-	timelineQuery.Set("include_rts", "false")
-	fmt.Println(timelineQuery)
-	tweets, err := twitter.GetUserTimeline(timelineQuery)
-	if err != nil {
-		fmt.Printf("Error to getUserTimeline. err:%v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println(tweets)
 	e.GET("/", hello)
 	e.GET("/test", test)
 	e.GET("/tweets", moldData)
@@ -56,6 +30,7 @@ func main() {
 	e.Logger.Fatal(e.Start(":80"))
 }
 
+// 初期化
 func loadEnv() {
 	err := godotenv.Load(".env")
 	if err != nil {
@@ -67,7 +42,7 @@ func loadEnv() {
 	accessTokenSecret = os.Getenv("ACCESS_TOKEN_SECRET")
 }
 
-// ハンドラーを定義
+// ハンドラー定義
 func hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, twippy-api")
 }
@@ -77,5 +52,32 @@ func test(c echo.Context) error {
 }
 
 func moldData(c echo.Context) error {
-	return c.JSON(http.StatusOK, tweetDataType{})
+	anaconda.SetConsumerKey(consumerKey)
+	anaconda.SetConsumerSecret(consumerSecret)
+	twitter := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
+
+	timelineQuery := url.Values{}
+
+	timelineQuery.Set("screen_name", "fukke0906")
+	timelineQuery.Set("count", "20")
+	timelineQuery.Set("include_rts", "false")
+	timelineQuery.Set("exclude_replies", "false")
+	tweets, err := twitter.GetUserTimeline(timelineQuery)
+
+	if err != nil {
+		fmt.Printf("Error to getUserTimeline. err:%v\n", err)
+		os.Exit(1)
+	}
+
+	return c.JSON(http.StatusOK, tweets)
 }
+
+// 型定義
+type (
+	tweetDataType struct {
+		Name       string   `json:"name"`
+		ScreenName string   `json:"screenName"`
+		Icon       string   `json:"icon"`
+		Tweets     []string `json:"tweets"`
+	}
+)
