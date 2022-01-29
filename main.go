@@ -61,7 +61,7 @@ func moldData(c echo.Context) error {
 	name := c.QueryParam("name")
 
 	timelineQuery.Set("screen_name", name)
-	timelineQuery.Set("count", "2")
+	timelineQuery.Set("count", "100")
 	timelineQuery.Set("include_rts", "false")
 	timelineQuery.Set("exclude_replies", "false")
 	tweets, err := twitter.GetUserTimeline(timelineQuery)
@@ -70,6 +70,8 @@ func moldData(c echo.Context) error {
 		fmt.Printf("Error to getUserTimeline. err:%v\n", err)
 		os.Exit(1)
 	}
+
+	// fmt.Println(tweets[0])
 
 	return c.JSON(http.StatusOK, tweets)
 }
