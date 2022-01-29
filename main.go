@@ -58,8 +58,10 @@ func moldData(c echo.Context) error {
 
 	timelineQuery := url.Values{}
 
-	timelineQuery.Set("screen_name", "fukke0906")
-	timelineQuery.Set("count", "20")
+	name := c.QueryParam("name")
+
+	timelineQuery.Set("screen_name", name)
+	timelineQuery.Set("count", "2")
 	timelineQuery.Set("include_rts", "false")
 	timelineQuery.Set("exclude_replies", "false")
 	tweets, err := twitter.GetUserTimeline(timelineQuery)
