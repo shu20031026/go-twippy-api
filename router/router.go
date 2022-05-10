@@ -12,7 +12,8 @@ func Init() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/", controller.EndPoint)
+	e.GET("/", controller.GetEndPoint)
+	e.GET("/tweets", controller.GetTweets)
 
 	e.Logger.Fatal(e.Start(":80"))
 }
