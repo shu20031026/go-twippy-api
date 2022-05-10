@@ -1,87 +1,54 @@
 package main
 
-import (
-	"fmt"
-	"net/http"
-	"net/url"
-	"os"
-
-	"github.com/ChimeraCoder/anaconda"
-	"github.com/joho/godotenv"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-)
-
-var consumerKey string
-var consumerSecret string
-var accessToken string
-var accessTokenSecret string
+import "main/router"
 
 func main() {
-	loadEnv()
-	e := echo.New()
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	e.GET("/", hello)
-	e.GET("/test", test)
-	e.GET("/tweets", moldData)
-
-	e.Logger.Fatal(e.Start(":80"))
+	router.Init()
 }
 
 // 初期化
-func loadEnv() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		fmt.Printf(".envファイルの読み込みに失敗しました: %v", err)
-	}
-	consumerKey = os.Getenv("CONSUMER_KEY")
-	consumerSecret = os.Getenv("CONSUMER_SECRET")
-	accessToken = os.Getenv("ACCESS_TOKEN")
-	accessTokenSecret = os.Getenv("ACCESS_TOKEN_SECRET")
-}
+// func loadEnv() {
+// 	err := godotenv.Load(".env")
+// 	if err != nil {
+// 		fmt.Printf(".envファイルの読み込みに失敗しました: %v", err)
+// 	}
+// 	consumerKey = os.Getenv("CONSUMER_KEY")
+// 	consumerSecret = os.Getenv("CONSUMER_SECRET")
+// 	accessToken = os.Getenv("ACCESS_TOKEN")
+// 	accessTokenSecret = os.Getenv("ACCESS_TOKEN_SECRET")
+// }
 
-// ハンドラー定義
-func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, twippy-api")
-}
+// func moldData(c echo.Context) error {
+// 	anaconda.SetConsumerKey(consumerKey)
+// 	anaconda.SetConsumerSecret(consumerSecret)
+// 	twitter := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
 
-func test(c echo.Context) error {
-	return c.String(http.StatusOK, "test")
-}
+// 	timelineQuery := url.Values{}
 
-func moldData(c echo.Context) error {
-	anaconda.SetConsumerKey(consumerKey)
-	anaconda.SetConsumerSecret(consumerSecret)
-	twitter := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
+// 	name := c.QueryParam("name")
 
-	timelineQuery := url.Values{}
+// 	timelineQuery.Set("screen_name", name)
+// 	timelineQuery.Set("count", "100")
+// 	timelineQuery.Set("include_rts", "false")
+// 	timelineQuery.Set("exclude_replies", "false")
+// 	tweets, err := twitter.GetUserTimeline(timelineQuery)
 
-	name := c.QueryParam("name")
+// 	if err != nil {
+// 		fmt.Printf("Error to getUserTimeline. err:%v\n", err)
+// 		os.Exit(1)
+// 	}
 
-	timelineQuery.Set("screen_name", name)
-	timelineQuery.Set("count", "100")
-	timelineQuery.Set("include_rts", "false")
-	timelineQuery.Set("exclude_replies", "false")
-	tweets, err := twitter.GetUserTimeline(timelineQuery)
+// 	// fmt.Println(tweets[0])
 
-	if err != nil {
-		fmt.Printf("Error to getUserTimeline. err:%v\n", err)
-		os.Exit(1)
-	}
+// 	return c.JSON(http.StatusOK, tweets)
+// }
 
-	// fmt.Println(tweets[0])
-
-	return c.JSON(http.StatusOK, tweets)
-}
-
-// 型定義
-type (
-	tweetDataType struct {
-		Name       string   `json:"name"`
-		ScreenName string   `json:"screenName"`
-		Icon       string   `json:"icon"`
-		Tweets     []string `json:"tweets"`
-	}
-)
+// // 型定義
+// type (
+// 	tweetDataType struct {
+// 		Name       string   `json:"name"`
+// 		ScreenName string   `json:"screenName"`
+// 		Icon       string   `json:"icon"`
+// 		Tweets     []string `json:"tweets"`
+// 	}
+// )

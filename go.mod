@@ -1,4 +1,4 @@
-module twippy_api
+module main
 
 go 1.17
 
