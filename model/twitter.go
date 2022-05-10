@@ -6,27 +6,10 @@ import (
 	"os"
 
 	"github.com/ChimeraCoder/anaconda"
-	"github.com/joho/godotenv"
 )
 
-var consumerKey string
-var consumerSecret string
-var accessToken string
-var accessTokenSecret string
-
-func LoadEnv() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		fmt.Printf(".envファイルの読み込みに失敗しました: %v", err)
-	}
-	consumerKey = os.Getenv("CONSUMER_KEY")
-	consumerSecret = os.Getenv("CONSUMER_SECRET")
-	accessToken = os.Getenv("ACCESS_TOKEN")
-	accessTokenSecret = os.Getenv("ACCESS_TOKEN_SECRET")
-}
-
 func FetchTweet(name string) []anaconda.Tweet {
-	LoadEnv()
+	consumerKey, consumerSecret, accessToken, accessTokenSecret := LoadEnv()
 
 	anaconda.SetConsumerKey(consumerKey)
 	anaconda.SetConsumerSecret(consumerSecret)
