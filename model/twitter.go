@@ -30,13 +30,3 @@ func FetchTweet(name string) []anaconda.Tweet {
 
 	return tweets
 }
-
-// // 型定義
-// type (
-// 	tweetDataType struct {
-// 		Name       string   `json:"name"`
-// 		ScreenName string   `json:"screenName"`
-// 		Icon       string   `json:"icon"`
-// 		Tweets     []string `json:"tweets"`
-// 	}
-// )
