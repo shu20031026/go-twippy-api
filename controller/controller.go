@@ -4,6 +4,7 @@ import (
 	"main/model"
 	"math/rand"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -35,7 +36,11 @@ func GetTweets(c echo.Context) error {
 	var TweetsSlice = moldData.Tweets
 
 	for _, tweet := range tweets {
-		TweetsSlice = append(TweetsSlice, tweet.FullText)
+		conditions := strings.Contains(tweet.FullText, "https://") || strings.Contains(tweet.FullText, "@") || strings.Contains(tweet.FullText, "#")
+		// conditions := strings.Contains(tweet.FullText, "https://")
+		if !conditions {
+			TweetsSlice = append(TweetsSlice, tweet.FullText)
+		}
 	}
 
 	rand.Seed(time.Now().UnixNano())
@@ -46,4 +51,5 @@ func GetTweets(c echo.Context) error {
 	moldData.Tweets = ReturnTweets
 
 	return c.JSON(http.StatusOK, moldData)
+	// return c.JSON(http.StatusOK, tweets)
 }
