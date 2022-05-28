@@ -12,7 +12,7 @@ func GetEndPoint(c echo.Context) error {
 }
 
 // 型定義
-type tweetDataType struct {
+type MoldDataType struct {
 	Name       string   `json:"name"`
 	ScreenName string   `json:"screenName"`
 	Icon       string   `json:"icon"`
@@ -21,7 +21,20 @@ type tweetDataType struct {
 
 func GetTweets(c echo.Context) error {
 	name := c.QueryParam("name")
+	// count := c.QueryParam("count")
 
 	tweets := model.FetchTweet(name)
-	return c.JSON(http.StatusOK, tweets)
+
+	var moldData MoldDataType
+	moldData.Icon = tweets[0].User.ProfileImageUrlHttps
+	moldData.Name = tweets[0].User.Name
+	moldData.ScreenName = tweets[0].User.ScreenName
+	var TweetsSlice = moldData.Tweets
+
+	for _, tweet := range tweets {
+		TweetsSlice = append(TweetsSlice, tweet.FullText)
+	}
+	moldData.Tweets = TweetsSlice
+
+	return c.JSON(http.StatusOK, moldData)
 }
