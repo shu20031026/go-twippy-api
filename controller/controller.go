@@ -37,7 +37,6 @@ func GetTweets(c echo.Context) error {
 
 	for _, tweet := range tweets {
 		conditions := strings.Contains(tweet.FullText, "https://") || strings.Contains(tweet.FullText, "@") || strings.Contains(tweet.FullText, "#")
-		// conditions := strings.Contains(tweet.FullText, "https://")
 		if !conditions {
 			TweetsSlice = append(TweetsSlice, tweet.FullText)
 		}
@@ -51,5 +50,4 @@ func GetTweets(c echo.Context) error {
 	moldData.Tweets = ReturnTweets
 
 	return c.JSON(http.StatusOK, moldData)
-	// return c.JSON(http.StatusOK, tweets)
 }
