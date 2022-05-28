@@ -2,7 +2,9 @@ package controller
 
 import (
 	"main/model"
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -21,9 +23,10 @@ type MoldDataType struct {
 
 func GetTweets(c echo.Context) error {
 	name := c.QueryParam("name")
-	// count := c.QueryParam("count")
 
-	tweets := model.FetchTweet(name)
+	FETCH_COUNT := "100"
+
+	tweets := model.FetchTweet(name, FETCH_COUNT)
 
 	var moldData MoldDataType
 	moldData.Icon = tweets[0].User.ProfileImageUrlHttps
@@ -34,7 +37,13 @@ func GetTweets(c echo.Context) error {
 	for _, tweet := range tweets {
 		TweetsSlice = append(TweetsSlice, tweet.FullText)
 	}
-	moldData.Tweets = TweetsSlice
+
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(TweetsSlice), func(i, j int) { TweetsSlice[i], TweetsSlice[j] = TweetsSlice[j], TweetsSlice[i] })
+
+	ReturnTweets := TweetsSlice[0:5]
+
+	moldData.Tweets = ReturnTweets
 
 	return c.JSON(http.StatusOK, moldData)
 }

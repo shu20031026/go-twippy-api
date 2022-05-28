@@ -8,7 +8,7 @@ import (
 	"github.com/ChimeraCoder/anaconda"
 )
 
-func FetchTweet(name string) []anaconda.Tweet {
+func FetchTweet(name string, fetchCount string) []anaconda.Tweet {
 	//初期化
 	consumerKey, consumerSecret, accessToken, accessTokenSecret := LoadEnv()
 	anaconda.SetConsumerKey(consumerKey)
@@ -18,7 +18,7 @@ func FetchTweet(name string) []anaconda.Tweet {
 	// クエリパラメータの設定
 	timelineQuery := url.Values{}
 	timelineQuery.Set("screen_name", name)
-	timelineQuery.Set("count", "3")
+	timelineQuery.Set("count", fetchCount)
 	timelineQuery.Set("include_rts", "false")
 	timelineQuery.Set("exclude_replies", "false")
 	fetchData, err := twitter.GetUserTimeline(timelineQuery)
