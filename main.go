@@ -1,32 +1,7 @@
 package main
 
-import (
-	"net/http"
-
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-)
+import "main/router"
 
 func main() {
-	e := echo.New()
-
-	// ミドルウェアを設定
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	// ルートを設定
-	e.GET("/", hello) // ローカル環境の場合、http://localhost:1323/ にGETアクセスされるとhelloハンドラーを実行する
-	e.GET("/test", test)
-
-	// サーバーをポート番号1323で起動
-	e.Logger.Fatal(e.Start(":80"))
-}
-
-// ハンドラーを定義
-func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, twippy-api")
-}
-
-func test(c echo.Context) error {
-	return c.String(http.StatusOK, "test")
+	router.Init()
 }
