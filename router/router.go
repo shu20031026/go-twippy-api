@@ -20,5 +20,6 @@ func Init() {
 	e.GET("/", controller.GetEndPoint)
 	e.GET("/tweets", controller.GetTweets)
 
-	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
+	e.Start(":" + os.Getenv("PORT"))
+	// e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 }
