@@ -1,1 +1,1 @@
-web: bin/twippy-api
+web: bin/main
