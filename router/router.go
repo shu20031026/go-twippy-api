@@ -2,6 +2,7 @@ package router
 
 import (
 	"main/controller"
+	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -19,5 +20,5 @@ func Init() {
 	e.GET("/", controller.GetEndPoint)
 	e.GET("/tweets", controller.GetTweets)
 
-	// e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
+	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 }
