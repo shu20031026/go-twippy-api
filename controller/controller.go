@@ -22,8 +22,30 @@ type MoldDataType struct {
 	Tweets     []string `json:"tweets"`
 }
 
+func CheckUnMatchWord(words []string, matchWords []string) []string {
+	var checkedWords []string
+
+	for _, word := range words {
+		conditions := false
+
+		for _, matchWord := range matchWords {
+			if strings.Contains(word, matchWord) || conditions {
+				conditions = true
+			} else {
+				conditions = false
+			}
+		}
+
+		if !conditions {
+			checkedWords = append(checkedWords, word)
+		}
+	}
+	return checkedWords
+}
+
 func GetTweets(c echo.Context) error {
 	name := c.QueryParam("name")
+	exclusionWords := [...]string{"https://", "http://", "@", "#"}
 
 	FETCH_COUNT := "100"
 
@@ -36,18 +58,17 @@ func GetTweets(c echo.Context) error {
 	var TweetsSlice = moldData.Tweets
 
 	for _, tweet := range tweets {
-		conditions := strings.Contains(tweet.FullText, "https://") || strings.Contains(tweet.FullText, "@") || strings.Contains(tweet.FullText, "#")
-		if !conditions {
-			TweetsSlice = append(TweetsSlice, tweet.FullText)
-		}
+		TweetsSlice = append(TweetsSlice, tweet.FullText)
 	}
+
+	TweetsSlice = CheckUnMatchWord(TweetsSlice, exclusionWords[:])
 
 	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(TweetsSlice), func(i, j int) { TweetsSlice[i], TweetsSlice[j] = TweetsSlice[j], TweetsSlice[i] })
 
-	ReturnTweets := TweetsSlice[0:5]
+	ReturnTweets := TweetsSlice
 
-	moldData.Tweets = ReturnTweets
+	moldData.Tweets = ReturnTweets[:5]
 
 	return c.JSON(http.StatusOK, moldData)
 }
