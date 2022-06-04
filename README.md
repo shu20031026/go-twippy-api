@@ -7,6 +7,4 @@ https://twippy-api.herokuapp.com/
 https://twippy-api.herokuapp.com/tweets?name=fukke0906
 
 ## デプロイ
-```
-$ git push {ブランチ名}:master
-```
+``` $ git push {ブランチ名}:master ```
